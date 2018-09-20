@@ -11,39 +11,49 @@ public class Execucao {
 
 	static int opc;
 	static int valor;
-	
+	static int valorMin; 
+	static int valorMax; 
 	public static void verificarPagamento(String pag) throws ParseException {
 		JFormattedTextField parcela = new JFormattedTextField();
 		JFormattedTextField parcela6x = new JFormattedTextField();
 		JFormattedTextField parcela12x = new JFormattedTextField();
 		
-		if(pag.equals("Crédito")) {
-			opc = 1; 
-			mascara(parcela);
-			Object[] local = {"Taxa de Crédito", parcela};
-			JOptionPane.showMessageDialog(null, local, pag, JOptionPane.INFORMATION_MESSAGE);
-			String parcelamento = parcela.getText();
-			parcelamento = parcelamento.replace("", "");
-			checkValorVazio(parcelamento, pag);
-		}else {
-			opc = 2;
-			Object[] local = {"Preencha os campos. \n" + "Taxa de Parcelamento em 6x", parcela6x,
-							"\n Taxa de Parcelamento em 12x", parcela12x};
-			
-			JOptionPane.showMessageDialog(null, local, pag, JOptionPane.INFORMATION_MESSAGE);
-			String parcelamento6x = parcela6x.getText();
-			String parcelamento12x = parcela12x.getText();
-			parcelamento6x = parcelamento6x.replace("", "");
-			parcelamento12x = parcelamento12x.replace("", "");
-			checkParcelaVazia(parcelamento6x, parcelamento12x, pag);
-			}
+		if(pag.equals("Débito")) {
+			JOptionPane.showMessageDialog(null, "Pagamento Realizado", null, JOptionPane.INFORMATION_MESSAGE);
+		}else 
+			if(pag.equals("Crédito")) {
+				
+				opc = 1; 
+				mascara(parcela);
+				if(parcela.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "O campo é obrigatório", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}else {
+					Object[] local = {"Taxa de Crédito", parcela};
+					
+					JOptionPane.showMessageDialog(null, local, pag, JOptionPane.INFORMATION_MESSAGE);
+					String parcelamento = parcela.getText();
+					parcelamento = parcelamento.replace("", "");
+					checkValorVazio(parcelamento, pag);
+				}	
+			}else {
+				opc = 2;
+				Object[] local = {"Preencha os campos. \n" + "Taxa de Parcelamento em 6x", parcela6x,
+								"\n Taxa de Parcelamento em 12x", parcela12x};
+				
+				JOptionPane.showMessageDialog(null, local, pag, JOptionPane.INFORMATION_MESSAGE);
+				String parcelamento6x = parcela6x.getText();
+				String parcelamento12x = parcela12x.getText();
+				parcelamento6x = parcelamento6x.replace("", "");
+				parcelamento12x = parcelamento12x.replace("", "");
+				checkParcelaVazia(parcelamento6x, parcelamento12x, pag);
+				}
 		}
 	
 	
 	
 	public static void mascara(JFormattedTextField txtfield) throws ParseException {
 		MaskFormatter numero = new MaskFormatter("**");
-		numero.setValidCharacters("##");
+		numero.setValidCharacters("0123456789");
 		numero.install(txtfield);
 		txtfield.addFocusListener(new FocusListener() {
 			
@@ -73,12 +83,12 @@ public class Execucao {
 	
 	public static void checkValor(String pag) {
 		if(opc == 3) {
-			if(valor >=1 && valor <=10) {
+			if(valor >=valorMin && valor <=valorMax) {
 				JOptionPane.showMessageDialog(null, "Pagamento Realizado", null, JOptionPane.INFORMATION_MESSAGE);
 			}else {
 				JOptionPane.showMessageDialog(null, "Taxa informada encontra-se fora dos valores aceitáveis", "Erro", JOptionPane.ERROR_MESSAGE);
 			}
-		}else if(valor > 10) {
+		}else if(valor > valorMax) {
 			JOptionPane.showMessageDialog(null, "Pagamento Realizado", null, JOptionPane.INFORMATION_MESSAGE);
 		}else {
 			JOptionPane.showMessageDialog(null, "Taxa informada encontra-se fora dos valores aceitáveis", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -91,6 +101,9 @@ public class Execucao {
 			checkValor(pag);
 			parcelamento12x = "";
 		}else if(parcelamento12x.isEmpty()) {
+			if(parcelamento12x.equalsIgnoreCase("N/A")) {
+				JOptionPane.showMessageDialog(null, "Pagamento Concluído", null, JOptionPane.INFORMATION_MESSAGE);
+			}
 			valor = Integer.parseInt(parcelamento12x);
 			checkValor(pag);
 		}

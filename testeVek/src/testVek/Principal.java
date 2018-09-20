@@ -65,19 +65,37 @@ public class Principal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(cBox.getSelectedItem().equals("4409")) {
-					 pag = (String) JOptionPane.showInputDialog(null, "Selecione a forma de pagamento", "Pagamento", JOptionPane.PLAIN_MESSAGE, null, tipoPag, null);                
-				        JOptionPane.showMessageDialog(null, "Operação concluída", pag, JOptionPane.PLAIN_MESSAGE); 
+					 pag = (String) JOptionPane.showInputDialog(null, "Selecione a forma de pagamento", "Forma de Pagamento", JOptionPane.PLAIN_MESSAGE, null, tipoPag, null);                
+				        JOptionPane.showMessageDialog(null, "Pagamento Realizado", pag, JOptionPane.PLAIN_MESSAGE); 
 				}else if(cBox.getSelectedItem().equals("4628")) {
-					pag = (String) JOptionPane.showInputDialog(null, "Selecione a forma de pagamento", "Pagamento", JOptionPane.PLAIN_MESSAGE, null, tipoPag, null);
-			       // Execucao.verificarPagamento(pag);
+					pag = (String) JOptionPane.showInputDialog(null, "Selecione a forma de pagamento", "Forma de Pagamento", JOptionPane.PLAIN_MESSAGE, null, tipoPag, null);
+			        try {
+						Execucao.verificarPagamento(pag);
+					} catch (ParseException e1) {
+						
+						e1.printStackTrace();
+					}
 				}else if(cBox.getSelectedItem().equals("4430")) {
 					JFormattedTextField amex = new JFormattedTextField();
-					//Execucao.mascara(amex);
+					try {
+						Execucao.mascara(amex);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+					Object[] local = {"Taxa Amex Crédito", amex};
 					
-				
+					JOptionPane.showMessageDialog(null, local, null, JOptionPane.INFORMATION_MESSAGE);
+					String tAmex; 
+					tAmex = amex.getText();
+					tAmex = tAmex.replace("", "");
+					Execucao.opc = 3;
+					Execucao.checkValorVazio(tAmex, pag);
 			}
 			}
 		});
+		
+		
 		contentPane.add(cBox);
 		
 	}
